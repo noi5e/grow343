@@ -50,7 +50,16 @@ ActiveAdmin.register LearningTarget do
             column :student
             column :score
             column :learning_objectives do |item|
-              item.learning_objectives.map(&:name).join(', ')
+              ids = item.achievements.pluck(:learning_objective_id).map(&:to_i)
+              resource.learning_objectives.each do |objective|
+                div do
+                  span do
+                    objective.id.in?(ids) ? '✅' : '❌'
+                  end
+                  span { objective.name }
+                end
+              end
+              nil
             end
           end
         end
