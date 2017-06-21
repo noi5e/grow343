@@ -24,9 +24,17 @@
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #
 
-class User < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, 
-         :recoverable, :rememberable, :trackable, :validatable
+class Student < User
+
+  has_one :student_detail
+  has_one :teacher, through: :student_detail
+
+  delegate :graduation_year, :english_second_language, :individualized_education_plan, :teacher_id, to: :student_detail, allow_nil: true
+
+  accepts_nested_attributes_for :student_detail, :allow_destroy => true, :reject_if => proc { |obj| obj.blank? }
+
+  def name
+    email
+  end
+
 end
