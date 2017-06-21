@@ -1,4 +1,12 @@
 Rails.application.configure do
+
+  config.generators do |generate|
+    generate.test_framework :test_unit, fixture: false
+    generate.helper false
+    generate.assets false
+    generate.view_specs false
+  end
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded on
