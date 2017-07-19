@@ -7,7 +7,7 @@ ActiveAdmin.register LearningResult do
     link_to 'Results', [:results, :admin, resource.learning_target]
   end
 
-  permit_params :student_id, :score, :version, learning_objective_ids: []
+  permit_params :student_id, :notes, :score, :version, learning_objective_ids: []
 
   form do |f|
     h2 { f.object.student.name } if f.object.persisted?
@@ -16,6 +16,7 @@ ActiveAdmin.register LearningResult do
       f.input :version
       f.input :score
       f.input :learning_objectives, as: :check_boxes, collection: f.object.learning_target.learning_objectives
+      f.input :notes
     end
     f.actions
   end

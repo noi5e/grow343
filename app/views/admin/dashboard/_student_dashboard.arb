@@ -28,4 +28,12 @@ current_user.learning_targets.uniq.each do |target|
       end
     end
   end
+
+  results[target.id].each do |result|
+    next if result.notes.blank?
+    div style: 'margin-left: 20px' do
+      strong "V#{result.version}:"
+      text_node result.notes
+    end
+  end
 end
