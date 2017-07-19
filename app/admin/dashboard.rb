@@ -11,14 +11,7 @@ ActiveAdmin.register_page "Dashboard" do
     # end
 
     if current_user.is_a?(Student)
-      panel "Scores" do
-        table_for current_user.learning_targets do
-          column :title
-          column :score do |target|
-            target.learning_results.where(student_id: current_user.id).maximum(:score)
-          end
-        end
-      end
+      render 'student_dashboard'
     end
 
     # Here is an example of a simple dashboard with columns and panels.

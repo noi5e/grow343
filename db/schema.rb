@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170621050452) do
+ActiveRecord::Schema.define(version: 20170712165112) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,10 +49,11 @@ ActiveRecord::Schema.define(version: 20170621050452) do
   create_table "learning_resources", force: :cascade do |t|
     t.string "name"
     t.string "url"
-    t.bigint "learning_target_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["learning_target_id"], name: "index_learning_resources_on_learning_target_id"
+    t.integer "learning_objective_id", null: false
+    t.integer "category", default: 0, null: false
+    t.index ["learning_objective_id"], name: "index_learning_resources_on_learning_objective_id"
   end
 
   create_table "learning_results", force: :cascade do |t|
@@ -61,13 +62,13 @@ ActiveRecord::Schema.define(version: 20170621050452) do
     t.float "score"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "version", null: false
     t.index ["learning_target_id"], name: "index_learning_results_on_learning_target_id"
     t.index ["student_id"], name: "index_learning_results_on_student_id"
   end
 
   create_table "learning_targets", force: :cascade do |t|
     t.integer "grade"
-    t.integer "version"
     t.string "title"
     t.text "common_core_state_standards"
     t.datetime "created_at", null: false
@@ -100,6 +101,8 @@ ActiveRecord::Schema.define(version: 20170621050452) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "type"
+    t.string "first_name"
+    t.string "last_name"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["id", "type"], name: "index_users_on_id_and_type", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -108,7 +111,7 @@ ActiveRecord::Schema.define(version: 20170621050452) do
   add_foreign_key "achievements", "learning_objectives"
   add_foreign_key "achievements", "learning_results"
   add_foreign_key "learning_objectives", "learning_targets"
-  add_foreign_key "learning_resources", "learning_targets"
+  add_foreign_key "learning_resources", "learning_objectives"
   add_foreign_key "learning_results", "learning_targets"
   add_foreign_key "learning_results", "users", column: "student_id"
   add_foreign_key "student_details", "users", column: "student_id"

@@ -16,6 +16,8 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  type                   :string
+#  first_name             :string
+#  last_name              :string
 #
 # Indexes
 #
@@ -29,11 +31,19 @@ class Student < User
   has_one :student_detail
   has_one :teacher, through: :student_detail
   has_many :learning_results
+  has_many :achievements, through: :learning_results
   has_many :learning_targets, through: :learning_results
 
   delegate :graduation_year, :english_second_language, :individualized_education_plan, :teacher_id, to: :student_detail, allow_nil: true
 
   accepts_nested_attributes_for :student_detail, :allow_destroy => true, :reject_if => proc { |obj| obj.blank? }
+
+  # ===========
+  # = Getters =
+  # ===========
+  def score(results, version)
+    results.detect{ |result| result.student_id == id && result.version == version }.try(:score)
+  end
 
   def name
     email

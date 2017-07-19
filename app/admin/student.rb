@@ -1,12 +1,14 @@
 ActiveAdmin.register Student do
 
-  permit_params :email, :password, student_detail_attributes: [:teacher_id, :english_second_language, :graduation_year, :individualized_education_plan]
+  permit_params :email, :password, :first_name, :last_name, student_detail_attributes: [:id, :teacher_id, :english_second_language, :graduation_year, :individualized_education_plan]
 
   form do |f|
 
     f.semantic_errors *f.object.errors.keys
 
     f.inputs do
+      f.input :first_name
+      f.input :last_name
       f.input :email
       f.input :password
     end

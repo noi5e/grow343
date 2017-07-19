@@ -1,0 +1,17 @@
+h1 resource.title
+table_for students, class: :index_table do
+  column :name
+  3.times do |i|
+    j = i + 1
+    column "V#{j}" do |student|
+      v1_score = student.score(learning_target.learning_results, 1)
+      result = learning_target.learning_results.detect{ |result| result.student_id == student.id && result.version == j }
+      score = result.try(:score)
+      status_tag(score, j == 1 ? :default : score == v1_score ? :warning : score > v1_score ? :ok : :error) if score
+      link_to 'edit', [:edit, :admin, resource, result] if result
+    end
+  end
+  column '' do |student|
+    link_to '+ Result', [:new, :admin, resource, :learning_result, {learning_result: {student_id: student.id}}]
+  end
+end

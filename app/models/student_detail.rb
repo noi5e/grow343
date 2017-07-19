@@ -27,8 +27,8 @@ class StudentDetail < ApplicationRecord
   belongs_to :teacher
 
   enum({
-    english_second_language: %i(yes_esl no_esl former),
-    individualized_education_plan: %i(yes_iep no_iep declassified)
+    english_second_language: %i(yes_esl no_esl former_esl),
+    individualized_education_plan: %i(yes_iep no_iep declassified_iep)
   })
 
   validates :teacher, presence: true

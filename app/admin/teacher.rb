@@ -1,11 +1,15 @@
 ActiveAdmin.register Teacher do
 
-  permit_params :email, :password
+  permit_params :email, :password, :first_name, :last_name
 
   form do |f|
     f.inputs do
       f.input :email
       f.input :password
+    end
+    f.inputs do
+      f.input :first_name
+      f.input :last_name
     end
     f.actions
   end

@@ -1,0 +1,33 @@
+<%= search_form_for @q, url: request.path, html: {class: 'filter_form'} do |f| %>
+  <div class='filter_form_field'>
+    <%= f.label :teacher_id_eq %>
+    <%= f.collection_select :teacher_id_eq, Teacher.all, :id, :name, include_blank: true %>
+  </div>
+  <div class='filter_form_field'>
+    <%= f.label :student_detail_english_second_language_eq, 'ESL' %>
+    <%= f.select :student_detail_english_second_language_eq, StudentDetail.english_second_languages, include_blank: true %>
+  </div>
+  <div class='filter_form_field'>
+    <%= f.label :student_detail_individualized_education_plan_eq, 'IEP' %>
+    <%= f.select :student_detail_individualized_education_plan_eq, StudentDetail.individualized_education_plans, include_blank: true %>
+  </div>
+  <div class='buttons'>
+    <%= f.submit 'Filter' %>
+    <a class="clear_filters_btn" href="<%= request.path %>">Clear Filters</a>
+  </div>
+<% end %>
+
+<hr/>
+
+<div class='filter_form_fields'>
+  <label>Go to:</label>
+  <%= select_tag :id, options_for_select(LearningTarget.all.map{ |target| [target.title, target.id] }, selected: resource.id), id: :target_select %>
+</div>
+
+<script type="text/javascript">
+  $('#target_select').on({
+    change:function(){
+      window.location = '<%= results_admin_learning_target_path(":id") %>'.replace(':id', $(this).val());
+    }
+  })
+</script>

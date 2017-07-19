@@ -4,7 +4,6 @@
 #
 #  id                          :integer          not null, primary key
 #  grade                       :integer
-#  version                     :integer
 #  title                       :string
 #  common_core_state_standards :text
 #  created_at                  :datetime         not null

@@ -8,6 +8,7 @@
 #  score              :float
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  version            :integer          not null
 #
 # Indexes
 #

@@ -16,6 +16,8 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  type                   :string
+#  first_name             :string
+#  last_name              :string
 #
 # Indexes
 #

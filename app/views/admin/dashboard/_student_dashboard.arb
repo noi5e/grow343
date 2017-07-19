@@ -1,0 +1,31 @@
+results = current_user.learning_results.group_by(&:learning_target_id)
+
+panel "Scores" do
+  table_for current_user.learning_targets.uniq do
+    column :title
+    (1..3).each do |i|
+      column "v#{i}" do |target|
+        results[target.id].detect{ |result| result.version == i }.try(:score)
+      end
+    end
+  end
+end
+
+objectives = LearningObjective.
+  joins(:learning_results).
+  where(learning_results: {student_id: current_user.id}, learning_target_id: current_user.learning_target_ids).
+  select('learning_results.version AS version, learning_objectives.id, learning_objectives.name')
+
+current_user.learning_targets.uniq.each do |target|
+  panel target.title do
+    table_for target.learning_objectives do
+      column :name
+      3.times do |i|
+        j = i + 1
+        column "v#{j}" do |objective|
+          objectives.detect{ |o| o.id == objective.id }.try(:version).to_i == j if results[target.id].detect{|result| result.version == j}
+        end
+      end
+    end
+  end
+end

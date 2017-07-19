@@ -8,6 +8,7 @@
 #  score              :float
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  version            :integer          not null
 #
 # Indexes
 #
@@ -26,5 +27,11 @@ class LearningResult < ApplicationRecord
   has_many :achievements
   has_many :learning_objectives, through: :achievements
 
-  validates :score, numericality: {greater_than_or_equal_to: 0, less_than_or_equal_to: 4, step: 0.5}
+  validates :score, numericality: {greater_than_or_equal_to: 0, less_than_or_equal_to: 4, step: 0.25}, presence: true
+  validates :version, {
+    numericality: {greater_than_or_equal_to: 1, step: 1},
+    presence: true,
+    uniqueness: {scope: [:learning_target_id, :student_id]}
+  }
+
 end

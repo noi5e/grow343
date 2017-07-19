@@ -19,4 +19,10 @@
 
 class LearningObjective < ApplicationRecord
   belongs_to :learning_target
+  has_many :learning_resources
+  has_many :achievements
+  has_many :learning_results, through: :achievements
+
+  accepts_nested_attributes_for :learning_resources, :allow_destroy => true, :reject_if => proc { |obj| obj.blank? }
+
 end
