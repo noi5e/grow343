@@ -35,4 +35,8 @@ class LearningResult < ApplicationRecord
     uniqueness: {scope: [:learning_target_id, :student_id]}
   }
 
+  def achieved?(objective)
+    objective.id.in?(learning_objective_ids)
+  end
+
 end

@@ -5,6 +5,23 @@ ActiveAdmin.register LearningTarget do
     @students = @q.result.includes(:learning_results)
   end
 
+  member_action :update_results, method: :put do
+    @results = params[:results].to_enum.each_with_object([]) do |item, array|
+      result = resource.learning_results.find_or_initialize_by(student_id: item[0], version: params[:version])
+      result.update(item[1].permit(:score, learning_objective_ids: []))
+      array.push(result)
+    end
+    redirect_to [:admin, resource, anchor: "v#{params[:version]}"]
+  end
+
+  member_action :edit_results do
+    @existing_results = resource.learning_results.where(version: params[:version])
+    @students = resource.students
+    @results = @students.each_with_object([]) do |student, array|
+      array.push(@existing_results.detect{ |result| result.student_id == student.id } || LearningResult.new(student: student))
+    end
+  end
+
   action_item :new_result, only: :results do
     link_to 'New Result', [:new, :admin, resource, :learning_result], data: {disable_with: '...'}
   end
@@ -67,6 +84,31 @@ ActiveAdmin.register LearningTarget do
           end
         end
       end
+      tab "V1" do
+        panel "V1 Results" do
+          div do
+            link_to 'Update Results', [:edit_results, :admin, resource, version: 1], class: :button
+          end
+          table_for Student.all do
+            column :name
+            column :score do |student|
+              student.score(resource.learning_results, 1)
+            end
+            column :objectives do |student|
+              next if student.score(resource.learning_results, 1).nil?
+              resource.learning_objectives.each do |objective|
+                div do
+                  span do
+                    student.achievements.exists?(learning_objective_id: objective.id) ? '✅' : '❌'
+                  end
+                  span { objective.name }
+                end
+              end
+              nil
+            end
+          end
+        end
+      end
       tab "Results (#{resource.learning_results.length})" do
         panel 'Results' do
           div do
@@ -114,12 +156,6 @@ ActiveAdmin.register LearningTarget do
         f3.input :name
         f3.input :url
       end
-    end
-    f.has_many :learning_results, allow_destroy: true do |f2|
-      f2.input :student
-      f2.input :version
-      f2.input :score
-      f2.input :learning_objectives, as: :check_boxes, collection: f.object.learning_objectives
     end
     f.actions
   end
