@@ -14,7 +14,7 @@
 4 verbose stack     at tryToString (fs.js:449:3)
 4 verbose stack     at FSReqWrap.readFileAfterClose [as oncomplete] (fs.js:436:12)
 5 verbose cwd /Users/gabeodess/Sites/school
-6 error Darwin 16.6.0
+6 error Darwin 16.7.0
 7 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "start"
 8 error node v7.7.4
 9 error npm  v4.1.2

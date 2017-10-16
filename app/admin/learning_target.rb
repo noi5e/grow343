@@ -84,27 +84,29 @@ ActiveAdmin.register LearningTarget do
           end
         end
       end
-      tab "V1" do
-        panel "V1 Results" do
-          div do
-            link_to 'Update Results', [:edit_results, :admin, resource, version: 1], class: :button
-          end
-          table_for Student.all do
-            column :name
-            column :score do |student|
-              student.score(resource.learning_results, 1)
+      (1..3).each do |version|
+        tab "V#{version}" do
+          panel "V#{version} Results" do
+            div do
+              link_to 'Update Results', [:edit_results, :admin, resource, version: version], class: :button
             end
-            column :objectives do |student|
-              next if student.score(resource.learning_results, 1).nil?
-              resource.learning_objectives.each do |objective|
-                div do
-                  span do
-                    student.achievements.exists?(learning_objective_id: objective.id) ? '✅' : '❌'
-                  end
-                  span { objective.name }
-                end
+            table_for Student.all do
+              column :name
+              column :score do |student|
+                student.score(resource.learning_results, version)
               end
-              nil
+              column :objectives do |student|
+                next if student.score(resource.learning_results, version).nil?
+                resource.learning_objectives.each do |objective|
+                  div do
+                    span do
+                      student.achievements.exists?(learning_objective_id: objective.id, learning_results: {version: version}) ? '✅' : '❌'
+                    end
+                    span { objective.name }
+                  end
+                end
+                nil
+              end
             end
           end
         end
