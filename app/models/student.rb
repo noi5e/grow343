@@ -42,7 +42,15 @@ class Student < User
   # = Getters =
   # ===========
   def score(results, version)
-    results.detect{ |result| result.student_id == id && result.version == version }.try(:score)
+    result_by_version(results, version).try(:score)
+  end
+
+  def notes(results, version)
+    result_by_version(results, version).try(:notes)
+  end
+
+  def result_by_version(results, version)
+    results.detect{ |result| result.student_id == id && result.version == version }
   end
 
   def name

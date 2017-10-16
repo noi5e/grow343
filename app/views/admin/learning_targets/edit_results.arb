@@ -3,7 +3,7 @@ form method: :post, action: update_results_admin_learning_target_path(resource, 
   input type: :hidden, name: :_method, value: :put
   input type: :hidden, name: :authenticity_token, value: form_authenticity_token
 
-  panel "#{resource.title} V1 Results" do
+  panel "#{resource.title} V#{params[:version]} Results" do
     table_for results do
       column :name do |result|
         result.student.name
@@ -31,6 +31,9 @@ form method: :post, action: update_results_admin_learning_target_path(resource, 
           end
         end
         nil
+      end
+      column :notes do |result|
+        textarea name: "results[#{result.student_id}][notes]", value: result.notes
       end
     end
   end

@@ -8,7 +8,7 @@ ActiveAdmin.register LearningTarget do
   member_action :update_results, method: :put do
     @results = params[:results].to_enum.each_with_object([]) do |item, array|
       result = resource.learning_results.find_or_initialize_by(student_id: item[0], version: params[:version])
-      result.update(item[1].permit(:score, learning_objective_ids: []))
+      result.update(item[1].permit(:score, :notes, learning_objective_ids: []))
       array.push(result)
     end
     redirect_to [:admin, resource, anchor: "v#{params[:version]}"]
@@ -106,6 +106,9 @@ ActiveAdmin.register LearningTarget do
                   end
                 end
                 nil
+              end
+              column :notes do |student|
+                student.notes(resource.learning_results, version)
               end
             end
           end
