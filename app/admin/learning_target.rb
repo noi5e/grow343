@@ -26,10 +26,6 @@ ActiveAdmin.register LearningTarget do
     link_to 'New Result', [:new, :admin, resource, :learning_result], data: {disable_with: '...'}
   end
 
-  action_item :results, only: :show do
-    link_to "Results", [:results, :admin, resource], data: {disable_with: '...'}
-  end
-
   sidebar :filters, partial: 'results_filter', only: :results
 
   index do
