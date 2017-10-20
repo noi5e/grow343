@@ -112,9 +112,6 @@ ActiveAdmin.register LearningTarget do
       end
       tab "Results (#{resource.learning_results.length})" do
         panel 'Results' do
-          div do
-            link_to 'Add Result', [:new, :admin, resource, :learning_result], class: 'button'
-          end
           table_for resource.learning_results do
             column :id do |item|
               link_to item.id, [:admin, resource, item]
