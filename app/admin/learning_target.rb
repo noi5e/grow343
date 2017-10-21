@@ -112,15 +112,14 @@ ActiveAdmin.register LearningTarget do
     f.inputs do
       f.input :title
       f.input :grade
-      f.input :common_core_state_standards
     end
     hr
     f.has_many :learning_objectives, allow_destroy: true do |f2|
-      f2.input :name
+      f2.input :name, label: "Title"
       f2.has_many :learning_resources, allow_destroy: true do |f3|
-        f3.input :category
-        f3.input :name
-        f3.input :url
+        f3.input :category, as: :radio, label: "Resource", wrapper_html: {class: 'inline-radio'}
+        f3.input :name, label: "Resource Title"
+        f3.input :url, label: "Resource URL"
       end
     end
     f.actions
