@@ -38,6 +38,24 @@ class Student < User
 
   accepts_nested_attributes_for :student_detail, :allow_destroy => true, :reject_if => proc { |obj| obj.blank? }
 
+  # ==========
+  # = Scopes =
+  # ==========
+  scope :grade, ->(grade){ joins(:student_detail).where(student_details: {graduation_year: graduation_year_by_grade(grade)}) }
+  scope :teacher, ->(teacher){ joins(:student_detail).where(student_details: {teacher_id: teacher.id}) }
+
+  # =================
+  # = Class Methods =
+  # =================
+  def self.graduation_year_by_grade(grade)
+    left = 8 - grade
+    today = Date.today
+    if today.month > 7
+      left += 1
+    end
+    today.year + left
+  end
+
   # ===========
   # = Getters =
   # ===========

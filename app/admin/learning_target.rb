@@ -1,10 +1,5 @@
 ActiveAdmin.register LearningTarget do
 
-  member_action :results do
-    @q = Student.where(id: resource.learning_results.select(:student_id)).ransack(params[:q])
-    @students = @q.result.includes(:learning_results)
-  end
-
   member_action :update_results, method: :put do
     @results = params[:results].to_enum.each_with_object([]) do |item, array|
       result = resource.learning_results.find_or_initialize_by(student_id: item[0], version: params[:version])
@@ -17,13 +12,10 @@ ActiveAdmin.register LearningTarget do
   member_action :edit_results do
     @existing_results = resource.learning_results.where(version: params[:version])
     @students = resource.students
+    @students = @students.teacher(current_user) if current_user.is_a?(Teacher)
     @results = @students.each_with_object([]) do |student, array|
       array.push(@existing_results.detect{ |result| result.student_id == student.id } || LearningResult.new(student: student))
     end
-  end
-
-  action_item :new_result, only: :results do
-    link_to 'New Result', [:new, :admin, resource, :learning_result], data: {disable_with: '...'}
   end
 
   sidebar :filters, partial: 'results_filter', only: :results
@@ -38,9 +30,7 @@ ActiveAdmin.register LearningTarget do
     end
     column :created_at
     column :updated_at
-    actions do |resource|
-      link_to 'Results', [:results, :admin, resource]
-    end
+    actions
   end
 
   show do
@@ -80,13 +70,14 @@ ActiveAdmin.register LearningTarget do
           end
         end
       end
+      @students = Student.grade(resource.grade).teacher(current_user)
       (1..3).each do |version|
         tab "V#{version}" do
           panel "V#{version} Results" do
             div do
               link_to 'Update Results', [:edit_results, :admin, resource, version: version], class: :button
             end
-            table_for Student.all do
+            table_for @students do
               column :name
               column :score do |student|
                 student.score(resource.learning_results, version)
@@ -106,29 +97,6 @@ ActiveAdmin.register LearningTarget do
               column :notes do |student|
                 student.notes(resource.learning_results, version)
               end
-            end
-          end
-        end
-      end
-      tab "Results (#{resource.learning_results.length})" do
-        panel 'Results' do
-          table_for resource.learning_results do
-            column :id do |item|
-              link_to item.id, [:admin, resource, item]
-            end
-            column :student
-            column :score
-            column :learning_objectives do |item|
-              ids = item.achievements.pluck(:learning_objective_id).map(&:to_i)
-              resource.learning_objectives.each do |objective|
-                div do
-                  span do
-                    objective.id.in?(ids) ? '✅' : '❌'
-                  end
-                  span { objective.name }
-                end
-              end
-              nil
             end
           end
         end

@@ -17,7 +17,7 @@ class LearningTarget < ApplicationRecord
   has_many :learning_resources, through: :learning_objectives
 
   def students
-    @students ||= Student.all
+    @students ||= Student.grade(grade)
   end
 
   accepts_nested_attributes_for :learning_resources, :allow_destroy => true, :reject_if => proc { |obj| obj.blank? }
