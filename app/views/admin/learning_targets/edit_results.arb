@@ -33,7 +33,9 @@ form method: :post, action: update_results_admin_learning_target_path(resource, 
         nil
       end
       column :notes do |result|
-        textarea name: "results[#{result.student_id}][notes]", value: result.notes
+        textarea name: "results[#{result.student_id}][notes]" do
+          result.notes
+        end
       end
     end
   end
