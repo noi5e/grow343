@@ -1,0 +1,50 @@
+results = current_user.learning_results.where(learning_target_id: resource.id).group_by(&:learning_target_id)
+objectives = LearningObjective.
+  joins(:learning_results).
+  where(learning_results: {student_id: current_user.id}, learning_target_id: resource.id).
+  select('learning_results.version AS version, learning_objectives.id, learning_objectives.name')
+
+panel resource.title do
+  table_for resource.learning_objectives + [LearningObjective.new(name: 'Comments:')] do
+    column 'Learning Objective' do |objective|
+      method = objective.name == 'Comments:' ? :strong : :span
+      send(method) do
+        objective.name
+      end
+    end
+    3.times do |i|
+      j = i + 1
+      column "v#{j}" do |objective|
+        if objective.name == 'Comments:'
+          results[resource.id].detect{ |result| result.version == j }.try(&:notes)
+        else
+          objectives.detect{ |o| o.id == objective.id }.try(:version).to_i == j if results[resource.id].detect{|result| result.version == j}
+        end
+      end
+    end
+    column 'LO Resource' do |objective|
+      objective.learning_resources.select(&:instruction?).each do |instruction|
+        li do
+          link_to instruction.name, instruction.url
+        end
+      end
+      nil
+    end
+    column 'LO Practice' do |objective|
+      objective.learning_resources.select(&:practice?).each do |practice|
+        li do
+          link_to practice.name, practice.url
+        end
+      end
+      nil
+    end
+  end
+end
+
+results[resource.id].sort_by(&:version).each do |result|
+  next if result.notes.blank?
+  div style: 'margin-left: 20px' do
+    strong "V#{result.version}:"
+    text_node result.notes
+  end
+end

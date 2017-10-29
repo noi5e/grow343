@@ -31,6 +31,8 @@ ActiveAdmin.register Student do
     selectable_column
     id_column
     column :email
+    column :graduation_year
+    column :teacher
     actions
   end
 

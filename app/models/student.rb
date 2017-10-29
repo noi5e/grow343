@@ -56,9 +56,22 @@ class Student < User
     today.year + left
   end
 
+  def self.grade_by_graduation_year(year)
+    today = Date.today
+    diff = year - today.year
+    if today.month > 7
+      diff -= 1
+    end
+    8 - diff
+  end
+
   # ===========
   # = Getters =
   # ===========
+  def grade
+    @grade ||= Student.grade_by_graduation_year(graduation_year)
+  end
+
   def score(results, version)
     result_by_version(results, version).try(:score)
   end

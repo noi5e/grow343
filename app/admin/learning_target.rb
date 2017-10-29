@@ -34,75 +34,13 @@ ActiveAdmin.register LearningTarget do
   end
 
   show do
-
-    tabs do
-      tab 'Details' do
-        columns do
-          column do
-            attributes_table do
-              resource.class.column_names.each do |key|
-                row key
-              end
-            end
-          end
-          column do
-            panel 'Objectives' do
-              table_for resource.learning_objectives do
-                column :name
-                column :instruction do |objective|
-                  objective.learning_resources.instruction.each do |resource|
-                    div do
-                      link_to resource.name, resource.url, target: :_blank
-                    end
-                  end
-                  nil
-                end
-                column :practice do |objective|
-                  objective.learning_resources.practice.each do |resource|
-                    div do
-                      link_to resource.name, resource.url, target: :_blank
-                    end
-                  end
-                  nil
-                end
-              end
-            end
-          end
-        end
-      end
-      @students = Student.grade(resource.grade).teacher(current_user)
-      (1..3).each do |version|
-        tab "V#{version}" do
-          panel "V#{version} Results" do
-            div do
-              link_to 'Update Results', [:edit_results, :admin, resource, version: version], class: :button
-            end
-            table_for @students do
-              column :name
-              column :score do |student|
-                student.score(resource.learning_results, version)
-              end
-              column :objectives do |student|
-                next if student.score(resource.learning_results, version).nil?
-                resource.learning_objectives.each do |objective|
-                  div do
-                    span do
-                      student.achievements.exists?(learning_objective_id: objective.id, learning_results: {version: version}) ? '✅' : '❌'
-                    end
-                    span { objective.name }
-                  end
-                end
-                nil
-              end
-              column :notes do |student|
-                student.notes(resource.learning_results, version)
-              end
-            end
-          end
-        end
-      end
+    case current_user
+    when Teacher
+      render 'show_teacher'
+      active_admin_comments
+    when Student
+      render 'show_student'
     end
-    active_admin_comments
   end
 
   permit_params :title, :grade, :common_core_state_standards,

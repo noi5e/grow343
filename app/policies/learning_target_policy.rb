@@ -1,5 +1,13 @@
 class LearningTargetPolicy < ApplicationPolicy
 
+  def show?
+    true
+  end
+
+  def index?
+    true
+  end
+
   def results?
     teacher?
   end
@@ -13,6 +21,17 @@ class LearningTargetPolicy < ApplicationPolicy
   end
 
   class Scope < Scope
+
+    def initialize(user, scope)
+      @user = user
+      case user
+      when Student
+        @scope = scope.where(id: user.learning_target_ids)
+      else
+        @scope = scope
+      end
+    end
+
     def resolve
       scope
     end

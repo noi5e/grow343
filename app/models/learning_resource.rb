@@ -26,4 +26,5 @@ class LearningResource < ApplicationRecord
   belongs_to :learning_objective
 
   validates :learning_objective, :category, presence: true
+
 end

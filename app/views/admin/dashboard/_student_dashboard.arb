@@ -1,8 +1,10 @@
 results = current_user.learning_results.group_by(&:learning_target_id)
 
 panel "Scores" do
-  table_for current_user.learning_targets.uniq do
-    column :title
+  table_for current_user.learning_targets.where(grade: current_user.grade).uniq do
+    column :title do |resource|
+      link_to resource.title, [:admin, resource]
+    end
     (1..3).each do |i|
       column "v#{i}" do |target|
         results[target.id].detect{ |result| result.version == i }.try(:score)
