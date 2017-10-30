@@ -2,6 +2,8 @@ ActiveAdmin.register Student do
 
   permit_params :email, :password, :first_name, :last_name, student_detail_attributes: [:id, :teacher_id, :english_second_language, :graduation_year, :individualized_education_plan]
 
+  config.sort_order = 'last_name_asc'
+
   form do |f|
 
     f.semantic_errors *f.object.errors.keys
@@ -30,8 +32,9 @@ ActiveAdmin.register Student do
   index do
     selectable_column
     id_column
-    column :email
-    column :graduation_year
+    column :last_name
+    column :first_name
+    column :graduation_year, sortable: 'student_details.graduation_year'
     column :teacher
     actions
   end
