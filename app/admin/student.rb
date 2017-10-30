@@ -34,7 +34,7 @@ ActiveAdmin.register Student do
     id_column
     column :last_name
     column :first_name
-    column :graduation_year, sortable: 'student_details.graduation_year'
+    column :graduation_year
     column :teacher
     actions
   end
