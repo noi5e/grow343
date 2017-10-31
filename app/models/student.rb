@@ -85,7 +85,7 @@ class Student < User
   end
 
   def name
-    email
+    [first_name, last_name].join(' ')
   end
 
 end

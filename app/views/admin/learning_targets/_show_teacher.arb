@@ -16,26 +16,30 @@ tabs do
                 next
               end
               score = grouped_results[student.id].detect{ |result| result.version == version }.try(:score)
-              score1s[student.id] = score if version == 1
-              status = if version == 1
-                if score > 3
-                  :ok
-                elsif score > 2
-                  :warning
+              if score
+                score1s[student.id] = score if version == 1
+                status = if version == 1
+                  if score > 3
+                    :ok
+                  elsif score > 2
+                    :warning
+                  else
+                    :error
+                  end
                 else
-                  :error
+                  score1 = score1s[student.id]
+                  if score > score1 || score == 4
+                    :ok
+                  elsif score == score1
+                    :warning
+                  else
+                    :error
+                  end
                 end
+                status_tag score, status
               else
-                score1 = score1s[student.id]
-                if score > score1 || score == 4
-                  :ok
-                elsif score == score1
-                  :warning
-                else
-                  :error
-                end
+                text_node " - "
               end
-              status_tag score, status
             end
           end
         end

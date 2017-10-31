@@ -8,7 +8,7 @@
       %>
       <div class="graph">
         <%- (1..4).each do |score_group| %>
-          <div style="height: <%= (grouped_results[score_group] || []).length*100/max %>%;" class="bar"></div>
+          <div style="height: <%= max.nil? ? 0 : (grouped_results[score_group] || []).length*100/max %>%;" class="bar"></div>
         <% end %>
       </div>
       <h2 class='text-center'>V<%= version %></h2>
