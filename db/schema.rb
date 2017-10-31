@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170719155744) do
+ActiveRecord::Schema.define(version: 20171030013923) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,6 +65,7 @@ ActiveRecord::Schema.define(version: 20170719155744) do
     t.integer "version", null: false
     t.text "notes"
     t.index ["learning_target_id"], name: "index_learning_results_on_learning_target_id"
+    t.index ["student_id", "learning_target_id", "version"], name: "index_results_on_student_and_target_and_version", unique: true
     t.index ["student_id"], name: "index_learning_results_on_student_id"
   end
 

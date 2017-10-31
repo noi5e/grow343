@@ -1,7 +1,45 @@
+@students = Student.grade(resource.grade).teacher(current_user)
+@results = LearningResult.where(learning_target: learning_target, student_id: @students.select(:id))
 tabs do
   tab 'Details' do
     columns do
       column do
+
+        grouped_results = @results.group_by(&:student_id)
+        score1s = {}
+        table_for @students + [Student.new(first_name: 'dummy')] do
+          column :name
+          (1..3).each do |version|
+            column "V#{version}" do |student|
+              if student.first_name == 'dummy'
+                div{link_to 'Edit', [:edit_results, :admin, resource, version: version], class: :button}
+                next
+              end
+              score = grouped_results[student.id].detect{ |result| result.version == version }.try(:score)
+              score1s[student.id] = score if version == 1
+              status = if version == 1
+                if score > 3
+                  :ok
+                elsif score > 2
+                  :warning
+                else
+                  :error
+                end
+              else
+                score1 = score1s[student.id]
+                if score > score1 || score == 4
+                  :ok
+                elsif score == score1
+                  :warning
+                else
+                  :error
+                end
+              end
+              status_tag score, status
+            end
+          end
+        end
+
         attributes_table_for resource do
           resource.class.column_names.each do |key|
             row key
@@ -9,31 +47,12 @@ tabs do
         end
       end
       column do
-        panel 'Objectives' do
-          table_for resource.learning_objectives do
-            column :name
-            column :instruction do |objective|
-              objective.learning_resources.instruction.each do |resource|
-                div do
-                  link_to resource.name, resource.url, target: :_blank
-                end
-              end
-              nil
-            end
-            column :practice do |objective|
-              objective.learning_resources.practice.each do |resource|
-                div do
-                  link_to resource.name, resource.url, target: :_blank
-                end
-              end
-              nil
-            end
-          end
+        panel 'Results' do
+          render 'graph', results: @results
         end
       end
     end
   end
-  @students = Student.grade(resource.grade).teacher(current_user)
   (1..3).each do |version|
     tab "V#{version}" do
       panel "V#{version} Results" do

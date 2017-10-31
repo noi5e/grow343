@@ -13,8 +13,9 @@
 #
 # Indexes
 #
-#  index_learning_results_on_learning_target_id  (learning_target_id)
-#  index_learning_results_on_student_id          (student_id)
+#  index_learning_results_on_learning_target_id     (learning_target_id)
+#  index_learning_results_on_student_id             (student_id)
+#  index_results_on_student_and_target_and_version  (student_id,learning_target_id,version) UNIQUE
 #
 # Foreign Keys
 #
@@ -37,6 +38,18 @@ class LearningResult < ApplicationRecord
 
   def achieved?(objective)
     objective.id.in?(learning_objective_ids)
+  end
+
+  def score_group
+    @score_group ||= if score == 4
+      4
+    elsif score >= 3
+      3
+    elsif score >= 2
+      2
+    else
+      1
+    end
   end
 
 end

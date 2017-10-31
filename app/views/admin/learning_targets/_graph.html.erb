@@ -1,0 +1,17 @@
+<ul class='list-inline'>
+  <%- (1..3).each do |version| %>
+    <li class='mr-1'>
+      <%-
+        version_results = results.select{ |result| result.version == version }.uniq
+        grouped_results = version_results.group_by(&:score_group)
+        max = grouped_results.map{ |score_group, results| results.length }.max
+      %>
+      <div class="graph">
+        <%- (1..4).each do |score_group| %>
+          <div style="height: <%= (grouped_results[score_group] || []).length*100/max %>%;" class="bar"></div>
+        <% end %>
+      </div>
+      <h2 class='text-center'>V<%= version %></h2>
+    </li>
+  <% end %>
+</ul>
