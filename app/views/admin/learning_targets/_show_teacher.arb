@@ -1,4 +1,4 @@
-@students = Student.grade(resource.grade).teacher(current_user)
+@students = Student.grade(resource.grade).teacher(current_user).reorder(:last_name)
 @results = LearningResult.where(learning_target: learning_target, student_id: @students.select(:id))
 tabs do
   tab 'Details' do
@@ -8,7 +8,9 @@ tabs do
         grouped_results = @results.group_by(&:student_id)
         score1s = {}
         table_for @students + [Student.new(email: 'dummy')] do
-          column :name
+          column :name do |student|
+            student.last_first unless student.email == 'dummys'
+          end
           (1..3).each do |version|
             column "V#{version}" do |student|
               if student.email == 'dummy'

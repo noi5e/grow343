@@ -68,6 +68,10 @@ class Student < User
   # ===========
   # = Getters =
   # ===========
+  def last_first
+    [last_name, first_name].join(', ')
+  end
+
   def grade
     @grade ||= Student.grade_by_graduation_year(graduation_year)
   end
