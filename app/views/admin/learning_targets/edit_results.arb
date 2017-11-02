@@ -4,9 +4,9 @@ form method: :post, action: update_results_admin_learning_target_path(resource, 
   input type: :hidden, name: :authenticity_token, value: form_authenticity_token
 
   panel "#{resource.title} V#{params[:version]} Results" do
-    table_for results do
+    table_for results.sort_by{ |result| result.student.last_name } do
       column :name do |result|
-        result.student.name
+        [result.student.last_name, result.student.first_name].join(", ")
       end
       column :score do |result|
         input type: :number, step: 0.25, max: 4, name: "results[#{result.student_id}][score]", value: result.score

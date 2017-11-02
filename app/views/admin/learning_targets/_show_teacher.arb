@@ -7,15 +7,15 @@ tabs do
 
         grouped_results = @results.group_by(&:student_id)
         score1s = {}
-        table_for @students + [Student.new(first_name: 'dummy')] do
+        table_for @students + [Student.new(email: 'dummy')] do
           column :name
           (1..3).each do |version|
             column "V#{version}" do |student|
-              if student.first_name == 'dummy'
+              if student.email == 'dummy'
                 div{link_to 'Edit', [:edit_results, :admin, resource, version: version], class: :button}
                 next
               end
-              score = grouped_results[student.id].detect{ |result| result.version == version }.try(:score)
+              score = (grouped_results[student.id] || []).detect{ |result| result.version == version }.try(:score)
               if score
                 score1s[student.id] = score if version == 1
                 status = if version == 1
