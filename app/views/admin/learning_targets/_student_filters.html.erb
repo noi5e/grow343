@@ -1,0 +1,27 @@
+<%
+@q ||= q
+%>
+<div class='panel sidebar_section'>
+  <h3>Filters</h3>
+  <div class='panel_contents'>
+    <%= search_form_for @q, url: request.url, html: {class: "filter_form"} do |f| %>
+
+      <div class='filter_form_field'>
+        <%= f.label :student_detail_teacher_id_eq %>
+        <%= f.collection_select :student_detail_teacher_id_eq, Teacher.all, :id, :name, include_blank: "Whole Grade" %>
+      </div>
+      <ul class='list-inline'>
+        <li class='filter_form_field'>
+          <%= f.label :student_detail_english_second_language_eq, "ELL" %>
+          <%= f.select :student_detail_english_second_language_eq, StudentDetail.english_second_languages, include_blank: "Any" %>
+        </li>
+        <li class='filter_form_field'>
+          <%= f.label :student_detail_individualized_education_plan_eq, "IEP" %>
+          <%= f.select :student_detail_individualized_education_plan_eq, StudentDetail.individualized_education_plans, include_blank: "Any" %>
+        </li>
+      </ul>
+
+      <%= f.submit %>
+    <% end %>
+  </div>
+</div>

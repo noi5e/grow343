@@ -28,9 +28,9 @@
 
 class Student < User
 
-  has_one :student_detail
+  has_one :student_detail, dependent: :destroy
   has_one :teacher, through: :student_detail
-  has_many :learning_results
+  has_many :learning_results, dependent: :destroy
   has_many :achievements, through: :learning_results
   has_many :learning_targets, through: :learning_results
 

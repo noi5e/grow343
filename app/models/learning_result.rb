@@ -26,7 +26,7 @@
 class LearningResult < ApplicationRecord
   belongs_to :student
   belongs_to :learning_target
-  has_many :achievements
+  has_many :achievements, dependent: :destroy
   has_many :learning_objectives, through: :achievements
 
   validates :score, numericality: {greater_than_or_equal_to: 0, less_than_or_equal_to: 4, step: 0.25}, presence: true
