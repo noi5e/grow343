@@ -1,7 +1,10 @@
 @q = Student.ransack(params[:q])
 @q.student_detail_teacher_id_eq = current_user.id if @q.student_detail_teacher_id_eq.nil? && params[:commit].blank?
 @students = @q.result.grade(resource.grade).reorder(:last_name)
-@results = LearningResult.where(learning_target: learning_target, student_id: @students.select(:id))
+@student_ids = @students.pluck(:id)
+@all_results = LearningResult.where(learning_target: learning_target)
+@results = @all_results.select{ |result| result.student_id.in?(@student_ids) }
+
 tabs do
   tab 'Details' do
     columns do
@@ -56,7 +59,10 @@ tabs do
         end
       end
       column do
-        panel 'Results' do
+        panel 'Whole Grade Results' do
+          render 'graph', results: @all_results
+        end
+        panel 'Filtered Results' do
           render 'graph', results: @results
         end
       end
