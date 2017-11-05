@@ -1,8 +1,13 @@
-results = current_user.learning_results.where(learning_target_id: resource.id).group_by(&:learning_target_id)
-objectives = LearningObjective.
-  joins(:learning_results).
-  where(learning_results: {student_id: current_user.id}, learning_target_id: resource.id).
-  select('learning_results.version AS version, learning_objectives.id, learning_objectives.name')
+results_query = current_user.learning_results.where(learning_target_id: resource.id)
+results = results_query.group_by(&:learning_target_id)
+# objectives = LearningObjective.
+#   joins(:learning_results, :).
+#   where(learning_results: {student_id: current_user.id}, learning_target_id: resource.id).
+#   select('learning_results.version AS version, learning_objectives.id, learning_objectives.name')
+
+achievements = current_user.achievements
+  .joins(:learning_result).where(learning_result_id: results_query.select(:id))
+  .select('learning_results.version AS version, learning_objective_id')
 
 panel resource.title do
   table_for resource.learning_objectives + [LearningObjective.new(name: 'Comments:')] do
@@ -13,12 +18,13 @@ panel resource.title do
       end
     end
     3.times do |i|
-      j = i + 1
-      column "v#{j}" do |objective|
+      version = i + 1
+      column "v#{version}" do |objective|
         if objective.name == 'Comments:'
-          results[resource.id].detect{ |result| result.version == j }.try(&:notes)
+          results[resource.id].detect{ |result| result.version == version }.try(&:notes)
         else
-          objectives.detect{ |o| o.id == objective.id }.try(:version).to_i == j if results[resource.id].detect{|result| result.version == j}
+          # objectives.detect{ |o| o.id == objective.id }.try(:version).to_i == version if results[resource.id].detect{|result| result.version == j}
+          achievements.detect{ |achievement| achievement.learning_objective_id == objective.id && achievement.version.to_i == version }.present?
         end
       end
     end

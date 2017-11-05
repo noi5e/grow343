@@ -4,6 +4,11 @@ ActiveAdmin.register Student do
 
   config.sort_order = 'last_name_asc'
 
+  member_action :log_in, method: :post do
+    sign_in(Student.find(params[:id]))
+    redirect_to :admin_dashboard
+  end
+
   form do |f|
 
     f.semantic_errors *f.object.errors.keys
@@ -36,7 +41,9 @@ ActiveAdmin.register Student do
     column :first_name
     column :graduation_year
     column :teacher
-    actions
+    actions do |student|
+      link_to 'Sign In', [:log_in, :admin, student], method: :post
+    end
   end
 
   show do
