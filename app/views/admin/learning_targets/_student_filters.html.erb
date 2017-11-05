@@ -7,6 +7,13 @@
     <%= search_form_for @q, url: request.url, html: {class: "filter_form"} do |f| %>
 
       <div class='filter_form_field'>
+        <%= label_tag :learning_target_id, "Learning Target" %>
+        <%= select_tag :learning_target_id, options_for_select(LearningTarget.all.map{ |target| [target.title, target.id] }, selected: resource.id), {
+          onchange: %{window.location = "#{admin_learning_target_path(':id')}".replace(":id", $(this).val())}
+        } %>
+      </div>
+
+      <div class='filter_form_field'>
         <%= f.label :student_detail_teacher_id_eq %>
         <%= f.collection_select :student_detail_teacher_id_eq, Teacher.all, :id, :name, include_blank: "Whole Grade" %>
       </div>
