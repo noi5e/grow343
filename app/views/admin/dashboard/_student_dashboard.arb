@@ -19,23 +19,5 @@ objectives = LearningObjective.
   select('learning_results.version AS version, learning_objectives.id, learning_objectives.name')
 
 current_user.learning_targets.uniq.each do |target|
-  panel target.title do
-    table_for target.learning_objectives do
-      column :name
-      3.times do |i|
-        j = i + 1
-        column "v#{j}" do |objective|
-          objectives.detect{ |o| o.id == objective.id }.try(:version).to_i == j if results[target.id].detect{|result| result.version == j}
-        end
-      end
-    end
-  end
-
-  results[target.id].each do |result|
-    next if result.notes.blank?
-    div style: 'margin-left: 20px' do
-      strong "V#{result.version}:"
-      text_node result.notes
-    end
-  end
+  render 'admin/learning_targets/show_student', {resource: target}
 end
