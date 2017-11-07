@@ -5,7 +5,7 @@ script do
   raw(
   <<-JAVASCRIPT
     google.charts.setOnLoadCallback(function(){
-      drawChart([["V1", 2],   ["V2", 2.5],  ["V3", 3]], 'chart-#{resource.id}');
+      drawChart(#{results.values.flatten.map{|result| [%{V#{result.version}}, result.score] }.to_json}, 'chart-#{resource.id}');
     });
   JAVASCRIPT
   )
