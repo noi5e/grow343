@@ -4,22 +4,43 @@
       <%-
         version_results = results.select{ |result| result.version == version }.uniq
         grouped_results = version_results.group_by(&:score_group)
-        max = grouped_results.map{ |score_group, results| results.length }.max
+        total_num_students = grouped_results.map{ |score_group, results| results.length }.sum
       %>
-      <div class="graph">
+
+      <%# debug(grouped_results) %>
+
+        <table id="q-graph">
+        <tbody>
+        <tr class="qtr" id="q1">
+        <th scope="row">V<%= version %></th>
+
         <%-
-        colors = {
-          1 => 'red',
-          2 => 'orange',
-          3 => 'green',
-          4 => 'gold'
+        styles = {
+          1 => 'levela',
+          2 => 'levelb',
+          3 => 'levelc',
+          4 => 'leveld'
         }
         %>
         <%- (1..4).each do |score_group| %>
-          <div style="height: <%= max.nil? ? 0 : (grouped_results[score_group] || []).length*100/max %>%;" class="bar bg-<%= colors[score_group] %>"></div>
+          <td class="<%= styles[score_group] %> bar" style="height: <%= total_num_students.nil? ? 0 : (grouped_results[score_group] || []).length*100/total_num_students %>%;"><p><%= grouped_results[score_group].length %></p></td>
         <% end %>
-      </div>
-      <h2 class='text-center'>V<%= version %></h2>
+        </tr>
+        </tbody>
+        </table>
+
+    <%# Add ticks and scaling to each graph %>
+    <div id="ticks">
+    <div class="tick" style="height: 59px;"><p>100%</p></div>
+    <div class="tick" style="height: 59px;"><p>80%</p></div>
+    <div class="tick" style="height: 59px;"><p>60%</p></div>
+    <div class="tick" style="height: 59px;"><p>40%</p></div>
+    <div class="tick" style="height: 59px;"><p>20%</p></div>
+    </div>
+
     </li>
   <% end %>
 </ul>
+
+
+
