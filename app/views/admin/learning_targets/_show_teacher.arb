@@ -50,6 +50,9 @@ tabs do
               end
             end
           end
+          div do
+            link_to('Download as CSV', "/reports/#{learning_target.id}.csv?learning_target_id=#{learning_target.id}&q%5Bstudent_detail_teacher_id_eq%5D=#{@q.student_detail_teacher_id_eq}")
+          end
         end
 
         attributes_table_for resource do
@@ -58,6 +61,7 @@ tabs do
           end
         end
       end
+
       column do
         panel 'Whole Grade Results' do
           render 'graph', results: @all_results

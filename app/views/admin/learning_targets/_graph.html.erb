@@ -23,7 +23,7 @@
         }
         %>
         <%- (1..4).each do |score_group| %>
-          <td class="<%= styles[score_group] %> bar" style="height: <%= total_num_students.nil? ? 0 : (grouped_results[score_group] || []).length*100/total_num_students %>%;"><p><%= grouped_results[score_group].length %></p></td>
+          <td class="<%= styles[score_group] %> bar" style="height: <%= (total_num_students.nil? || total_num_students == 0) ? 0 : (grouped_results[score_group] || []).length*100/total_num_students %>%;"><p><%= grouped_results.fetch(score_group, []).length %></p></td>
         <% end %>
         </tr>
         </tbody>
