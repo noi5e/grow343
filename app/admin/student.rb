@@ -1,5 +1,6 @@
 ActiveAdmin.register Student do
 
+  config.create_another = true
 
   permit_params :email, :password, :first_name, :last_name, student_detail_attributes: [:id, :teacher_id, :english_second_language, :graduation_year, :individualized_education_plan]
 
