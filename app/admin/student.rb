@@ -1,6 +1,13 @@
 ActiveAdmin.register Student do
 
+
   permit_params :email, :password, :first_name, :last_name, student_detail_attributes: [:id, :teacher_id, :english_second_language, :graduation_year, :individualized_education_plan]
+
+  filter :teacher
+  filter :student_detail_graduation_year, as: :numeric
+  filter :first_name
+  filter :last_name
+  filter :email
 
   config.sort_order = 'last_name_asc'
 
