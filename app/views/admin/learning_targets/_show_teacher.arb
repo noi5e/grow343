@@ -55,6 +55,9 @@ tabs do
           div do
             link_to('Download as CSV', "/reports/#{learning_target.id}.csv?learning_target_id=#{learning_target.id}&q%5Bstudent_detail_teacher_id_eq%5D=#{@q.student_detail_teacher_id_eq}")
           end
+          div do
+            link_to('Printer Friendly View', "/reports/#{learning_target.id}.html?learning_target_id=#{learning_target.id}&q%5Bstudent_detail_teacher_id_eq%5D=#{@q.student_detail_teacher_id_eq}", target: :_blank)
+          end
         end
 
         attributes_table_for resource do

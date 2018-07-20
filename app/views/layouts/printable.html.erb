@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+    <head>
+        <title>Print Friendly</title>
+        <style>
+
+/* Active Admin CSS */
+body {
+  line-height: 1;
+  color: black;
+  background: white;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 11.5px;
+}
+
+thead th {
+    font-weight: bold;
+}
+        </style>
+    </head>
+    <body>
+
+<p>Click the button to print the current page.</p>
+
+<button onclick="myFunction()">Print this page</button>
+
+<script>
+function myFunction() {
+    window.print();
+}
+</script>
+
+<hr>
+
+        <%= yield %>
+    </body>
+</html>

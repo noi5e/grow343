@@ -1,0 +1,28 @@
+<table border="0" cellspacing="0" cellpadding="10">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>V1</th>
+            <th>V2</th>
+            <th>V3</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for item in result_tpls %>
+            <tr class="odd">
+                <td>
+                    <div><%= item[0] %></div>
+                </td>
+                <td>
+                    <span><b><%= item[1] %></b></span>
+                </td>
+                <td>
+                    <span style="color: <%= item[2] %>"><b><%= item[3] %></b></span>
+                </td>
+                <td class="col col-v3">
+                    <span style="color: <%= item[4] %>"><b><%= item[5] %></b></span>
+                </td>
+            </tr>
+        <% end %>
+    </tbody>
+</table>
