@@ -13,6 +13,9 @@ class ReportsController < ApplicationController
             student_tpls.each do |rr|
                 learning_target_tpls = LearningResult.find_by_sql "Select a.* from learning_results a where a.learning_target_id=#{params[:learning_target_id]} and a.student_id = #{rr.id}"
 
+                # skip if we don't find any students with this learning target
+                next if learning_target_tpls.size < 1
+
                 # skip if the student's grade doesn't match this learning target's grade
                 next if learning_target.grade != Student.grade_by_graduation_year(rr.graduation_year)
 
@@ -69,7 +72,9 @@ class ReportsController < ApplicationController
         learning_target = LearningTarget.find( params[:learning_target_id] )
 
         # look up student_id by teacher_id
-        student_tpls = Student.find_by_sql "Select b.* from student_details a, users b where b.id = a.student_id and a.teacher_id = #{params[:q][:student_detail_teacher_id_eq]} and type = 'Student' order by b.last_name, b.first_name"
+        teacher_clause = "and a.teacher_id = #{params[:q][:student_detail_teacher_id_eq]}" if params[:q][:student_detail_teacher_id_eq].size > 0 else ""
+
+        student_tpls = Student.find_by_sql "Select b.* from student_details a, users b where b.id = a.student_id #{teacher_clause} and type = 'Student' order by b.last_name, b.first_name"
 
         respond_to do |format|
             format.html do
