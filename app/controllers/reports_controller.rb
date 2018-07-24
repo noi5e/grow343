@@ -50,7 +50,10 @@ class ReportsController < ApplicationController
         student_tpls.each do |rr|
             learning_target_tpls = LearningResult.find_by_sql "Select a.* from learning_results a where a.learning_target_id=#{params[:learning_target_id]} and a.student_id = #{rr.id}"
 
-             # skip if the student's grade doesn't match this learning target's grade
+            # skip if we don't find any students with this learning target
+            next if learning_target_tpls.size < 1
+
+            # skip if the student's grade doesn't match this learning target's grade
             next if learning_target.grade != Student.grade_by_graduation_year(rr.graduation_year)
 
             record_map = {}
