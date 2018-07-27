@@ -50,8 +50,7 @@ class Student < User
   def self.graduation_year_by_grade(grade)
     left = 8 - grade
     today = Date.today
-    # if today.month > 7
-    if today.month > 6
+    if today.month > 7
       left += 1
     end
     today.year + left
@@ -60,8 +59,7 @@ class Student < User
   def self.grade_by_graduation_year(year)
     today = Date.today
     diff = year - today.year
-    # if today.month > 7
-    if today.month > 6
+    if today.month > 7
       diff -= 1
     end
     8 - diff
