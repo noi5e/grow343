@@ -2,7 +2,8 @@
 @q.student_detail_teacher_id_eq = current_user.id if @q.student_detail_teacher_id_eq.nil? && params[:commit].blank?
 @students = @q.result.grade(resource.grade).reorder(:last_name)
 @student_ids = @students.pluck(:id)
-@all_results = LearningResult.where(learning_target: learning_target)
+@school_year_begin_yr = Time.now.month >= 9 ? Time.now.year : Time.now.year-1
+@all_results = LearningResult.where("learning_target_id = ? and  updated_at > ?", learning_target, "#{@school_year_begin_yr}-09-01")
 @results = @all_results.select{ |result| result.student_id.in?(@student_ids) }
 
 tabs do
