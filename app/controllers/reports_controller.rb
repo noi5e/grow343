@@ -46,9 +46,11 @@ class ReportsController < ApplicationController
 
     # for rendering the print friendly version, we'll pre-gather all the values
     def generate_learning_result_tuples(learning_target, student_tpls)
+        school_year_begin_yr = Time.now.month >= 9 ? Time.now.year : Time.now.year-1
+
         result_tpls = []
         student_tpls.each do |rr|
-            learning_target_tpls = LearningResult.find_by_sql "Select a.* from learning_results a where a.learning_target_id=#{params[:learning_target_id]} and a.student_id = #{rr.id}"
+            learning_target_tpls = LearningResult.find_by_sql "Select a.* from learning_results a where a.learning_target_id=#{params[:learning_target_id]} and a.student_id = #{rr.id} and updated_at > '#{school_year_begin_yr}-09-01'"
 
             # skip if we don't find any students with this learning target
             next if learning_target_tpls.size < 1
@@ -62,7 +64,6 @@ class ReportsController < ApplicationController
             end
 
             # look up 3 Learning Results by student_id and learning_target_id
-            color_2 =
             result_tpls.push(["#{rr.last_name}, #{rr.first_name}", record_map.fetch(1, "-"), color_cues(record_map, 2), record_map.fetch(2, "-"), color_cues(record_map, 3), record_map.fetch(3, "-")])
         end
         result_tpls
@@ -81,6 +82,7 @@ class ReportsController < ApplicationController
 
         respond_to do |format|
             format.html do
+                # the result of this has the correct number of students
                 results = generate_learning_result_tuples(learning_target, student_tpls)
                 render "learning_target_report", :layout => "printable.html.erb", :locals => { :result_tpls => results }
             end
