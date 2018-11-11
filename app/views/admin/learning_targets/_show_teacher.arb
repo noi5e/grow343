@@ -47,7 +47,11 @@ tabs do
                     :error
                   end
                 end
-                status_tag score, status
+                if version > 1
+                  status_tag score, status
+                else
+                  text_node score
+                end
               else
                 text_node " - "
               end
