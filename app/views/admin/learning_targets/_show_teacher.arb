@@ -17,7 +17,7 @@ tabs do
         table_for @students + [Student.new(email: 'dummy')] do
           column :name do |student|
             if student.email != 'dummy'
-              div{link_to student.last_first, [:log_in, :admin, student], method: :post}
+              div{link_to(student.last_first, "/admin/dashboard?student_id=#{student.id}", target: :_blank)}
             end
           end
           (1..3).each do |version|
