@@ -1,9 +1,11 @@
-results_query = current_user.learning_results.where(learning_target_id: resource.id)
+target_user = params.include?(:student_id) ? Student.find(params[:student_id]) : current_user
+
+results_query = target_user.learning_results.where(learning_target_id: resource.id)
 results = results_query.group_by(&:learning_target_id)
 
 versions = results[resource.id].map(&:version).sort
 
-achievements = current_user.achievements
+achievements = target_user.achievements
   .joins(:learning_result).where(learning_result_id: results_query.select(:id))
   .select('learning_results.version AS version, learning_objective_id')
 

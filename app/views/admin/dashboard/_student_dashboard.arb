@@ -1,7 +1,10 @@
-results = current_user.learning_results.group_by(&:learning_target_id)
+target_user = params.include?(:student_id) ? Student.find(params[:student_id]) : current_user
+
+results = target_user.learning_results.group_by(&:learning_target_id)
+
 
 panel "Scores" do
-  table_for current_user.learning_targets.where(grade: current_user.grade).uniq do
+  table_for target_user.learning_targets.where(grade: target_user.grade).uniq do
     column :title do |resource|
       link_to resource.title, [:admin, resource]
     end
@@ -15,9 +18,9 @@ end
 
 objectives = LearningObjective.
   joins(:learning_results).
-  where(learning_results: {student_id: current_user.id}, learning_target_id: current_user.learning_target_ids).
+  where(learning_results: {student_id: target_user.id}, learning_target_id: target_user.learning_target_ids).
   select('learning_results.version AS version, learning_objectives.id, learning_objectives.name')
 
-current_user.learning_targets.uniq.each do |target|
+target_user.learning_targets.uniq.each do |target|
   render 'admin/learning_targets/show_student', {resource: target}
 end

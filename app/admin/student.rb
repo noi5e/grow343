@@ -50,7 +50,7 @@ ActiveAdmin.register Student do
     column :graduation_year
     column :teacher
     actions do |student|
-      link_to 'Sign In', [:log_in, :admin, student], method: :post
+      link_to('Sign In', "/admin/dashboard?student_id=#{student.id}", target: :_blank)
     end
   end
 

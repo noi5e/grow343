@@ -7,6 +7,9 @@ ActiveAdmin.register_page "Dashboard" do
     if current_user.is_a?(Student)
       render 'student_dashboard'
     elsif current_user.is_a?(Teacher)
+      if params.include?(:student_id)
+        render 'student_dashboard', {student_id: params[:student_id]}
+      end
     end
 
   end # content
