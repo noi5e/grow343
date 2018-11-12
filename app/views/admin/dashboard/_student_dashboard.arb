@@ -3,7 +3,7 @@ target_user = params.include?(:student_id) ? Student.find(params[:student_id]) :
 results = target_user.learning_results.group_by(&:learning_target_id)
 
 
-panel "Scores" do
+panel "Scores for: " + target_user.last_first do
   table_for target_user.learning_targets.where(grade: target_user.grade).uniq do
     column :title do |resource|
       link_to resource.title, [:admin, resource]
