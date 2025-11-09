@@ -1,11 +1,6 @@
+# app/policies/active_admin/page_policy.rb
 module ActiveAdmin
-  class PagePolicy < ApplicationPolicy
-    class Scope < Struct.new(:user, :scope)
-      def resolve
-        scope
-      end
-    end
-
+  class PagePolicy < Admin::ApplicationPolicy
     def show?
       case record.name
       when 'Dashboard'

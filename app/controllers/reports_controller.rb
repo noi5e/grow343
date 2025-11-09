@@ -76,7 +76,12 @@ class ReportsController < ApplicationController
         learning_target = LearningTarget.find( params[:learning_target_id] )
 
         # look up student_id by teacher_id
-        teacher_clause = "and a.teacher_id = #{params[:q][:student_detail_teacher_id_eq]}" if params[:q][:student_detail_teacher_id_eq].size > 0 else ""
+        if params[:q][:student_detail_teacher_id_eq].size > 0
+            teacher_clause = "and a.teacher_id = #{params[:q][:student_detail_teacher_id_eq]}"
+        else
+            teacher_clause = ""
+        end
+
 
         student_tpls = Student.find_by_sql "Select b.* from student_details a, users b where b.id = a.student_id #{teacher_clause} and type = 'Student' order by b.last_name, b.first_name"
 
