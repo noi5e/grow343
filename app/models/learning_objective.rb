@@ -19,7 +19,7 @@
 
 class LearningObjective < ApplicationRecord
   belongs_to :learning_target
-  has_many :learning_resources
+  has_many :learning_resources, dependent: :destroy
   has_many :achievements
   has_many :learning_results, through: :achievements
 
