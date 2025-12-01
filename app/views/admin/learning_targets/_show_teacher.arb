@@ -48,7 +48,7 @@ tabs do
                   end
                 end
                 if version > 1
-                  status_tag score, status
+                  status_tag score, class: status.to_s
                 else
                   text_node score
                 end
