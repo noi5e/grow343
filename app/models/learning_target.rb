@@ -12,7 +12,7 @@
 
 class LearningTarget < ApplicationRecord
 
-  has_many :learning_results
+  has_many :learning_results, dependent: :destroy
   has_many :learning_objectives, dependent: :destroy
   has_many :learning_resources, through: :learning_objectives
 
